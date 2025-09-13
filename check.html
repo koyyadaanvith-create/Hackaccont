@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI Financial Tool Dashboard</title>
+  <style>
+    /* Reset & basic styles */
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      background: #f4f7fc;
+      color: #333;
+    }
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* Header */
+    header {
+      background-color: #3a86ff;
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    header h1 {
+      margin: 0;
+      font-weight: 700;
+      font-size: 1.5rem;
+    }
+    nav a {
+      margin-left: 1.5rem;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+    nav a:hover {
+      color: #ffd60a;
+    }
+
+    /* Container */
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    /* Grid Layout for dashboard */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2rem;
+    }
+
+    /* Card style */
+    .card {
+      background: white;
+      border-radius: 10px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Expense Input Section */
+    #expense-input h2 {
+      margin-top: 0;
+      margin-bottom: 1rem;
+      font-size: 1.25rem;
+      color: #3a86ff;
+    }
+    #expense-form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    #expense-form label {
+      flex: 1 1 100%;
+      font-weight: 600;
+    }
+    #expense-form input, #expense-form select {
+      padding: 0.5rem;
+      font-size: 1rem;
+      border: 1.5px solid #ddd;
+      border-radius: 6px;
+      width: 100%;
+      transition: border-color 0.3s ease;
+    }
+    #expense-form input:focus, #expense-form select:focus {
+      outline: none;
+      border-color: #3a86ff;
+    }
+    #expense-form button {
+      background-color: #3a86ff;
+      color: white;
+      font-weight: 700;
+      padding: 0.7rem 1.5rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 1rem;
+      align-self: flex-start;
+      transition: background-color 0.3s ease;
+    }
+    #expense-form button:hover {
+      background-color: #265dcc;
+    }
+    /* Mock AI category display */
+    #expense-category {
+      margin-top: 0.5rem;
+      font-weight: 600;
+      color: #555;
+      font-style: italic;
+    }
+
+    /* Predictive Spending Section */
+    #predictive-spending h2 {
+      color: #3a86ff;
+      margin-top: 0;
+      margin-bottom: 1rem;
+    }
+    .spending-summary {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: #222;
+    }
+    /* Placeholder chart box */
+    .chart-placeholder {
+      background: #e0e7ff;
+      height: 180px;
+      border-radius: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #6b76ff;
+      font-weight: 700;
+      font-size: 1rem;
+      user-select: none;
+      box-shadow: inset 0 0 10px #a3b0ff;
+    }
+
+    /* Goal Tracking Section */
+    #goal-tracking h2 {
+      color: #3a86ff;
+      margin-top: 0;
+      margin-bottom: 1rem;
+    }
+    .goal {
+      margin-bottom: 1rem;
+    }
+    .goal-label {
+      display: flex;
+      justify-content: space-between;
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+      color: #444;
+    }
+    .progress-bar {
+      background: #ddd;
+      border-radius: 6px;
+      overflow: hidden;
+      height: 18px;
+    }
+    .progress-fill {
+      height: 100%;
+      background-color: #3a86ff;
+      transition: width 0.5s ease;
+    }
+
+    /* Budget Alerts Section */
+    #budget-alerts h2 {
+      color: #3a86ff;
+      margin-top: 0;
+      margin-bottom: 1rem;
+    }
+    .alert {
+      background-color: #ffdada;
+      border-left: 5px solid #ff4e4e;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-radius: 6px;
+      color: #a70000;
+      font-weight: 600;
+      box-shadow: 0 1px 4px rgba(255, 78, 78, 0.3);
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 1.5rem 0;
+      color: #777;
+      font-size: 0.9rem;
+      margin-top: 3rem;
+      user-select: none;
+    }
+
+    /* Responsive tweaks */
+    @media (max-width: 600px) {
+      header {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      nav a {
+        margin-left: 0;
+        margin-right: 1rem;
+      }
+      #expense-form {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>AI Financial Tool</h1>
+    <nav>
+      <a href="#expense-input">Expense Input</a>
+      <a href="#predictive-spending">Predictive Spending</a>
+      <a href="#goal-tracking">Goal Tracking</a>
+      <a href="#budget-alerts">Budget Alerts</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <!-- Expense Input -->
+    <section class="card" id="expense-input">
+      <h2>Expense Input</h2>
+      <form id="expense-form" onsubmit="return false;">
+        <label for="description">Description</label>
+        <input type="text" id="description" name="description" placeholder="e.g. Starbucks coffee" required />
+
+        <label for="amount">Amount ($)</label>
+        <input type="number" id="amount" name="amount" min="0.01" step="0.01" placeholder="e.g. 4.50" required />
+
+        <label for="date">Date</label>
+        <input type="date" id="date" name="date" required />
+
+        <!-- Category will be shown here (mock AI) -->
+        <div id="expense-category">Category: <em>--</em></div>
+
+        <button type="submit" onclick="mockCategorize()">Add Expense</button>
+      </form>
+    </section>
+
+    <!-- Predictive Spending Analysis -->
+    <section class="card" id="predictive-spending">
+      <h2>Predictive Spending Analysis</h2>
+      <div class="spending-summary">
+        Your predicted spending for next month is <strong>$1,350</strong>.
+      </div>
+      <div class="chart-placeholder">[ Spending Forecast Chart ]</div>
+    </section>
+
+    <!-- Goal Tracking -->
+    <section class="card" id="goal-tracking">
+      <h2>Goal Tracking</h2>
+
+      <div class="goal">
+        <div class="goal-label">
+          <span>Emergency Fund</span>
+          <span>$3,000 / $5,000</span>
+        </div>
+        <div class="progress-bar" aria-label="Emergency Fund Progress">
+          <div class="progress-fill" style="width: 60%;"></div>
+        </div>
+      </div>
+
+      <div class="goal">
+        <div class="goal-label">
+          <span>Vacation Savings</span>
+          <span>$1,200 / $2,000</span>
+        </div>
+        <div class="progress-bar" aria-label="Vacation Savings Progress">
+          <div class="progress-fill" style="width: 60%; background-color: #ff6f91;"></div>
+        </div>
+      </div>
+
+      <div class="goal">
+        <div class="goal-label">
+          <span>Debt Payoff</span>
+          <span>$4,500 / $10,000</span>
+        </div>
+        <div class="progress-bar" aria-label="Debt Payoff Progress">
+          <div class="progress-fill" style="width: 45%; background-color: #00b894;"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Budget Alerts -->
+    <section class="card" id="budget-alerts">
+      <h2>Budget Alerts</h2>
+      <div class="alert">
+        You have used 90% of your Food & Dining budget this month.
+      </div>
+      <div class="alert">
+        Your Entertainment budget has been exceeded by $50.
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    &copy; 2025 AI Financial Tool &mdash; Prototype Demo
+  </footer>
+
+  <script>
+    // Mock AI categorization based on keywords in description
+    function mockCategorize() {
+      const descInput = document.getElementById('description');
+      const categoryDisplay = document.getElementById('expense-category').querySelector('em');
+      const description = descInput.value.toLowerCase();
+
+      // Simple keyword matching (mock)
+      let category = 'Other';
+      if (description.includes('coffee') || description.includes('starbucks') || description.includes('restaurant')) {
+        category = 'Food & Dining';
+      } else if (description.includes('uber') || description.includes('bus') || description.includes('taxi')) {
+        category = 'Transportation';
+      } else if (description.includes('netflix') || description.includes('movie') || description.includes('concert')) {
+        category = 'Entertainment';
+      } else if (description.includes('rent') || description.includes('mortgage')) {
+        category = 'Housing';
+      } else if (description.includes('gym') || description.includes('doctor') || description.includes('pharmacy')) {
+        category = 'Health';
+      }
+
+      categoryDisplay.textContent = category;
+
+      // Clear form inputs (simulate adding expense)
+      document.getElementById('expense-form').reset();
+
+      // Show alert (simulate feedback)
+    ;
+    }
+  </script>
+</body>
+</html>
